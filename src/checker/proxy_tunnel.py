@@ -48,8 +48,10 @@ class SOCKS5TunnelHandler(BaseHTTPRequestHandler):
             )
             
             logger.info(f"[TUNNEL] Connecting to {host}:{port} via SOCKS5...")
-            # Connect to target through SOCKS5
+            # Connect to target through SOCKS5 with timeout
+            sock.settimeout(30)  # 30 second connection timeout
             sock.connect((host, port))
+            sock.settimeout(None)  # Remove timeout after connection
             logger.info(f"[TUNNEL] Connected to {host}:{port}")
             
             # Send success response
@@ -140,26 +142,31 @@ class SOCKS5TunnelHandler(BaseHTTPRequestHandler):
     def _forward_data(self, source, destination):
         """Forward data bidirectionally"""
         sockets = [source, destination]
-        timeout = 60
+        timeout = 120  # Increased timeout to 120 seconds
         
         while True:
-            ready_sockets, _, _ = select.select(sockets, [], [], timeout)
-            
-            if not ready_sockets:
-                break
-            
-            for sock in ready_sockets:
-                try:
-                    data = sock.recv(4096)
-                    if not data:
+            try:
+                ready_sockets, _, _ = select.select(sockets, [], [], timeout)
+                
+                if not ready_sockets:
+                    break
+                
+                for sock in ready_sockets:
+                    try:
+                        data = sock.recv(8192)  # Increased buffer size
+                        if not data:
+                            return
+                        
+                        if sock is source:
+                            destination.sendall(data)
+                        else:
+                            source.sendall(data)
+                    except Exception as e:
+                        logger.debug(f"[TUNNEL] Socket error during forwarding: {e}")
                         return
-                    
-                    if sock is source:
-                        destination.sendall(data)
-                    else:
-                        source.sendall(data)
-                except:
-                    return
+            except Exception as e:
+                logger.debug(f"[TUNNEL] Select error: {e}")
+                return
 
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):

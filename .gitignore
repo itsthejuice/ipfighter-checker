@@ -55,6 +55,7 @@ exports/
 # Temporary files
 *.tmp
 *.temp
+windows-output.txt
 
 # Site Files
 /site-files

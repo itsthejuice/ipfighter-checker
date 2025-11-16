@@ -163,10 +163,34 @@ class IPFighterClient:
             # Set default timeout
             page.set_default_timeout(self.TIMEOUT)
             
-            # Navigate to IPFighter
+            # Navigate to IPFighter with retry logic
             logger.info(f"Navigating to {self.IPFIGHTER_URL}...")
             print(f"[CLIENT] Navigating to IPFighter...")
-            response = page.goto(self.IPFIGHTER_URL, wait_until='domcontentloaded')
+            
+            response = None
+            max_retries = 2
+            for attempt in range(max_retries):
+                try:
+                    response = page.goto(self.IPFIGHTER_URL, wait_until='networkidle', timeout=45000)
+                    if response:
+                        break
+                except PlaywrightTimeoutError:
+                    if attempt < max_retries - 1:
+                        logger.warning(f"Navigation timeout, retrying... (attempt {attempt + 1}/{max_retries})")
+                        print(f"[CLIENT] Timeout, retrying...")
+                        import time
+                        time.sleep(2)
+                    else:
+                        raise
+                except Exception as e:
+                    if "ERR_CONNECTION" in str(e) and attempt < max_retries - 1:
+                        logger.warning(f"Connection error, retrying... (attempt {attempt + 1}/{max_retries})")
+                        print(f"[CLIENT] Connection error, retrying...")
+                        import time
+                        time.sleep(2)
+                    else:
+                        raise
+            
             logger.info(f"Page loaded with status: {response.status if response else 'None'}")
             print(f"[CLIENT] Page loaded: HTTP {response.status if response else 'No Response'}")
             

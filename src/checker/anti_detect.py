@@ -211,6 +211,7 @@ class AntiDetectConfig:
             Object.defineProperty(navigator, 'webdriver', {
                 get: () => undefined
             });
+            delete navigator.__proto__.webdriver;
             """,
             
             # Platform spoofing
@@ -251,7 +252,7 @@ class AntiDetectConfig:
             });
             """,
             
-            # Permissions override
+            # Canvas fingerprinting noise
             """
             const originalGetContext = HTMLCanvasElement.prototype.getContext;
             HTMLCanvasElement.prototype.getContext = function(type, ...args) {
@@ -286,10 +287,78 @@ class AntiDetectConfig:
             
             # Media devices blocking (for privacy)
             """
-            const originalEnumerateDevices = navigator.mediaDevices.enumerateDevices;
-            navigator.mediaDevices.enumerateDevices = async () => {
-                return [];
-            };
+            if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+                navigator.mediaDevices.enumerateDevices = async () => [];
+                navigator.mediaDevices.getUserMedia = undefined;
+            }
+            """,
+            
+            # CRITICAL: WebRTC blocking - prevent IP leaks
+            """
+            // Block WebRTC completely to prevent IP leaks
+            if (typeof RTCPeerConnection !== 'undefined') {
+                const origRTCPeerConnection = RTCPeerConnection;
+                RTCPeerConnection = function(...args) {
+                    throw new Error('WebRTC is disabled');
+                };
+                RTCPeerConnection.prototype = origRTCPeerConnection.prototype;
+            }
+            
+            if (typeof webkitRTCPeerConnection !== 'undefined') {
+                const origWebkitRTCPeerConnection = webkitRTCPeerConnection;
+                webkitRTCPeerConnection = function(...args) {
+                    throw new Error('WebRTC is disabled');
+                };
+                webkitRTCPeerConnection.prototype = origWebkitRTCPeerConnection.prototype;
+            }
+            
+            if (typeof mozRTCPeerConnection !== 'undefined') {
+                const origMozRTCPeerConnection = mozRTCPeerConnection;
+                mozRTCPeerConnection = function(...args) {
+                    throw new Error('WebRTC is disabled');
+                };
+                mozRTCPeerConnection.prototype = origMozRTCPeerConnection.prototype;
+            }
+            
+            // Block getUserMedia to prevent device access
+            if (navigator.getUserMedia) navigator.getUserMedia = undefined;
+            if (navigator.webkitGetUserMedia) navigator.webkitGetUserMedia = undefined;
+            if (navigator.mozGetUserMedia) navigator.mozGetUserMedia = undefined;
+            
+            // Block enumerateDevices
+            if (navigator.mediaDevices) {
+                if (navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia = undefined;
+                }
+                if (navigator.mediaDevices.enumerateDevices) {
+                    navigator.mediaDevices.enumerateDevices = () => Promise.resolve([]);
+                }
+            }
+            """,
+            
+            # Remove automation flags
+            """
+            // Remove common automation detection flags
+            delete window.cdc_adoQpoasnfa76pfcZLmcfl_Array;
+            delete window.cdc_adoQpoasnfa76pfcZLmcfl_Promise;
+            delete window.cdc_adoQpoasnfa76pfcZLmcfl_Symbol;
+            delete window.cdc_adoQpoasnfa76pfcZLmcfl_Object;
+            delete window.cdc_adoQpoasnfa76pfcZLmcfl_Proxy;
+            """,
+            
+            # Headless Chrome detection prevention
+            """
+            // Override headless detection
+            Object.defineProperty(navigator, 'maxTouchPoints', {
+                get: () => 1
+            });
+            
+            // Connection type spoofing
+            if (navigator.connection) {
+                Object.defineProperty(navigator.connection, 'rtt', {
+                    get: () => 100
+                });
+            }
             """,
         ]
 
@@ -334,9 +403,25 @@ def get_context_options(config: Dict[str, Any], proxy_url: Optional[str] = None)
 def get_browser_args() -> list:
     """Get browser launch arguments for anti-detection"""
     return [
+        # Core automation detection bypasses
         "--disable-blink-features=AutomationControlled",
+        "--exclude-switches=enable-automation",
+        "--disable-automation",
+        
+        # WebRTC and media device blocking
+        "--disable-webrtc",
+        "--disable-webrtc-hw-encoding",
+        "--disable-webrtc-hw-decoding",
+        "--disable-webrtc-encryption",
+        "--enforce-webrtc-ip-permission-check",
+        
+        # Fingerprinting prevention
+        "--disable-features=AudioServiceOutOfProcess,IsolateOrigins,site-per-process",
+        "--disable-site-isolation-trials",
+        "--disable-web-security",
+        
+        # Performance and stability
         "--disable-dev-shm-usage",
-        "--disable-accelerated-2d-canvas",
         "--disable-gpu",
         "--no-first-run",
         "--no-zygote",
@@ -356,5 +441,12 @@ def get_browser_args() -> list:
         "--no-default-browser-check",
         "--no-sandbox",
         "--disable-setuid-sandbox",
+        
+        # Additional privacy flags
+        "--disable-plugins-discovery",
+        "--disable-preconnect",
+        "--disable-sync",
+        "--disable-notifications",
+        "--disable-hang-monitor",
     ]
 

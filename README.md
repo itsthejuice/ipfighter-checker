@@ -2,6 +2,19 @@
 
 A cross-platform GUI application to check SOCKS5 proxies using IPFighter. Built with Python and Flet for a modern, responsive user interface.
 
+## 🔧 Recent Updates (Nov 2025)
+
+**Major fixes for proxy detection and Windows stability:**
+- ✅ **WebRTC IP Leak Fixed**: Complete WebRTC blocking to prevent real IP exposure
+- ✅ **Connection Stability**: Added retry logic and increased timeouts for Windows
+- ✅ **Anti-Detection**: Enhanced browser fingerprinting protection
+- ✅ **Proxy Detection**: Should now pass IPFighter checks without being flagged
+
+📖 **See detailed documentation**:
+- **[FIX_SUMMARY.md](FIX_SUMMARY.md)** - Quick overview of fixes
+- **[WINDOWS_FIXES.md](WINDOWS_FIXES.md)** - Technical details and analysis
+- **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - How to verify fixes work
+
 ## Features
 
 - ✅ **Multi-Proxy Checking**: Check multiple proxies simultaneously
