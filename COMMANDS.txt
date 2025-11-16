@@ -1,0 +1,133 @@
+IPFighter Checker - Command Reference
+======================================
+
+LOCATION
+--------
+cd /home/admin/Projects/ipfighter-checker
+
+
+TESTING (Optional)
+------------------
+# Test proxy parser functionality
+python3 test_parser.py
+
+
+SETUP (First Time Only)
+-----------------------
+
+Linux:
+  ./scripts/setup_linux.sh
+
+Windows:
+  scripts\setup_windows.bat
+
+
+RUN APPLICATION
+---------------
+
+Linux:
+  ./scripts/run_linux.sh
+
+Windows:
+  scripts\run_windows.bat
+
+
+ADVANCED OPTIONS
+----------------
+
+# Run with custom worker count (3-15 recommended)
+./scripts/run_linux.sh --workers 10
+
+# Show help
+./scripts/run_linux.sh --help
+
+
+TROUBLESHOOTING
+---------------
+
+# Fix permissions (Linux)
+chmod +x scripts/*.sh test_parser.py
+
+# Install Python (Ubuntu/Debian)
+sudo apt update && sudo apt install python3 python3-venv python3-pip
+
+# Reset virtual environment
+rm -rf venv && ./scripts/setup_linux.sh
+
+
+PROJECT STRUCTURE
+-----------------
+
+Key directories:
+  src/         - Application source code
+  scripts/     - Setup and run scripts
+  
+Key files:
+  README.md        - Complete documentation
+  QUICKSTART.md    - Quick start guide
+  INSTALLATION.md  - Setup instructions
+  FEATURES.md      - Feature documentation
+  requirements.txt - Python dependencies
+  test_parser.py   - Test script
+
+
+EXAMPLE PROXY FORMATS
+---------------------
+
+Format 1: host:port:username:password
+us.922s5.net:6300:user-zone-custom:password123
+
+Format 2: host:port
+proxy.example.com:1080
+
+Format 3: username:password@host:port
+user:pass@proxy.com:5000
+
+
+WHAT IT EXTRACTS
+----------------
+
+For each proxy:
+✓ IP Address
+✓ Country & Country Code
+✓ City
+✓ Zip Code
+✓ Hostname
+✓ ISP
+✓ DNS
+✓ WebRTC
+✓ Mobile Connect
+✓ Proxy Detection Status
+✓ Blacklist Status
+
+
+QUICK START
+-----------
+
+1. cd /home/admin/Projects/ipfighter-checker
+2. python3 test_parser.py    (optional test)
+3. ./scripts/setup_linux.sh  (first time only)
+4. ./scripts/run_linux.sh    (run the app)
+5. Paste proxies, click "Check Proxies"!
+
+
+DOCUMENTATION
+-------------
+
+All documentation is in the project root:
+- README.md          : Complete guide
+- QUICKSTART.md      : Quick reference
+- INSTALLATION.md    : Setup details
+- FEATURES.md        : All features
+- COMMANDS.txt       : This file
+
+
+SUPPORT
+-------
+
+Check documentation files for help.
+All code includes detailed comments.
+
+
+Happy proxy checking! 🚀
+

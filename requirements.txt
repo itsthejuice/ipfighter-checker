@@ -1,0 +1,20 @@
+# IPFighter Checker Dependencies
+
+# GUI Framework
+flet>=0.21.0
+
+# HTTP Requests
+requests>=2.31.0
+requests[socks]>=2.31.0
+
+# HTML Parsing
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+
+# SOCKS Proxy Support
+PySocks>=1.7.1
+
+# Additional utilities
+urllib3>=2.0.0
+certifi>=2023.0.0
+
