@@ -21,14 +21,14 @@ class ProgressIndicatorComponent:
         self.progress_bar = ft.ProgressBar(
             value=0,
             width=None,
-            color=ft.colors.BLUE_700,
-            bgcolor=ft.colors.BLUE_100,
+            color=ft.Colors.BLUE_400,
+            bgcolor=ft.Colors.GREY_800,
         )
         
         self.progress_text = ft.Text(
             "Ready to check proxies",
             size=14,
-            color=ft.colors.GREY_700,
+            color=ft.Colors.GREY_400,
             text_align=ft.TextAlign.CENTER,
         )
         
@@ -39,9 +39,9 @@ class ProgressIndicatorComponent:
                 self.progress_bar,
             ]),
             padding=15,
-            border=ft.border.all(1, ft.colors.BLUE_300),
+            border=ft.border.all(1, ft.Colors.GREY_700),
             border_radius=5,
-            bgcolor=ft.colors.BLUE_50,
+            bgcolor=ft.Colors.GREY_900,
             visible=False,
         )
         

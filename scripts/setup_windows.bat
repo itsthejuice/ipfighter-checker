@@ -1,7 +1,22 @@
 @echo off
+
+REM Get the directory where the script is located
+set "SCRIPT_DIR=%~dp0"
+REM Remove trailing backslash
+set "SCRIPT_DIR=%SCRIPT_DIR:~0,-1%"
+REM Get the project root directory (parent of scripts directory)
+for %%I in ("%SCRIPT_DIR%") do set "PROJECT_ROOT=%%~dpI"
+REM Remove trailing backslash
+set "PROJECT_ROOT=%PROJECT_ROOT:~0,-1%"
+
+REM Change to project root directory
+cd /d "%PROJECT_ROOT%"
+
 echo ============================================
 echo IPFighter Checker - Windows Setup
 echo ============================================
+echo.
+echo Working directory: %PROJECT_ROOT%
 echo.
 
 REM Check if Python is installed
@@ -54,6 +69,15 @@ if %errorlevel% neq 0 (
     echo ERROR: Failed to install dependencies
     pause
     exit /b 1
+)
+echo.
+
+REM Install Playwright browsers
+echo Installing Playwright browsers...
+playwright install chromium
+if %errorlevel% neq 0 (
+    echo WARNING: Failed to install Playwright browsers
+    echo You may need to run: playwright install chromium
 )
 echo.
 

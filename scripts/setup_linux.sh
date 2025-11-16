@@ -1,8 +1,18 @@
 #!/bin/bash
 
+# Get the directory where the script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Get the project root directory (parent of scripts directory)
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
+# Change to project root directory
+cd "$PROJECT_ROOT"
+
 echo "============================================"
 echo "IPFighter Checker - Linux Setup"
 echo "============================================"
+echo ""
+echo "Working directory: $PROJECT_ROOT"
 echo ""
 
 # Check if Python is installed
@@ -54,6 +64,15 @@ pip install -r requirements.txt
 if [ $? -ne 0 ]; then
     echo "ERROR: Failed to install dependencies"
     exit 1
+fi
+echo ""
+
+# Install Playwright browsers
+echo "Installing Playwright browsers..."
+playwright install chromium
+if [ $? -ne 0 ]; then
+    echo "WARNING: Failed to install Playwright browsers"
+    echo "You may need to run: playwright install chromium"
 fi
 echo ""
 

@@ -4,7 +4,7 @@ Main entry point for IPFighter Checker
 
 import sys
 import argparse
-from gui.app import run_app
+from .gui.app import run_app
 
 
 def main():

@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Get the directory where the script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Get the project root directory (parent of scripts directory)
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
+# Change to project root directory
+cd "$PROJECT_ROOT"
+
 echo "============================================"
 echo "IPFighter Checker - Starting Application"
 echo "============================================"
@@ -19,12 +27,8 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Change to src directory and run the application
-cd src
-python3 main.py "$@"
-
-# Return to root directory
-cd ..
+# Run the application as a module
+python3 -m src.main "$@"
 
 echo ""
 echo "Application closed."

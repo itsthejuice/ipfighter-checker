@@ -26,7 +26,7 @@ class ResultDisplayComponent:
         
         self.export_button = ft.OutlinedButton(
             "Export Results",
-            icon=ft.icons.DOWNLOAD,
+            icon=ft.Icons.DOWNLOAD,
             on_click=self._on_export_clicked,
             visible=False,
         )
@@ -38,11 +38,11 @@ class ResultDisplayComponent:
                         "Results",
                         size=20,
                         weight=ft.FontWeight.BOLD,
-                        color=ft.colors.BLUE_700,
+                        color=ft.Colors.BLUE_700,
                     ),
                     self.export_button,
                 ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-                ft.Divider(height=2, color=ft.colors.BLUE_400),
+                ft.Divider(height=2, color=ft.Colors.BLUE_400),
                 ft.Container(height=5),
                 self.results_column,
             ]),
@@ -98,15 +98,15 @@ class ResultDisplayComponent:
         
         # Determine card color based on success
         if result.success:
-            border_color = ft.colors.GREEN_400
-            bg_color = ft.colors.GREEN_50
-            status_icon = ft.icons.CHECK_CIRCLE
-            status_color = ft.colors.GREEN_700
+            border_color = ft.Colors.GREEN_400
+            bg_color = ft.Colors.GREEN_900
+            status_icon = ft.Icons.CHECK_CIRCLE
+            status_color = ft.Colors.GREEN_400
         else:
-            border_color = ft.colors.RED_400
-            bg_color = ft.colors.RED_50
-            status_icon = ft.icons.ERROR
-            status_color = ft.colors.RED_700
+            border_color = ft.Colors.RED_400
+            bg_color = ft.Colors.RED_900
+            status_icon = ft.Icons.ERROR
+            status_color = ft.Colors.RED_400
         
         # Build info rows
         info_rows = []
@@ -114,53 +114,53 @@ class ResultDisplayComponent:
         # Proxy string
         info_rows.append(
             ft.Row([
-                ft.Icon(ft.icons.LINK, size=16, color=ft.colors.GREY_700),
-                ft.Text("Proxy:", weight=ft.FontWeight.BOLD, size=12),
-                ft.Text(result.proxy_string, size=12, selectable=True),
-            ], spacing=5)
+                ft.Icon(ft.Icons.LINK, size=16, color=ft.Colors.GREY_400),
+                ft.Text("Proxy:", weight=ft.FontWeight.BOLD, size=12, no_wrap=False),
+                ft.Text(result.proxy_string, size=12, selectable=True, no_wrap=False),
+            ], spacing=5, wrap=True)
         )
         
         if result.success:
             # Add all extracted information
             fields = [
-                ("IP Address", result.ip_address, ft.icons.PUBLIC),
-                ("Country", f"{result.country} ({result.country_code})" if result.country_code else result.country, ft.icons.FLAG),
-                ("City", result.city, ft.icons.LOCATION_CITY),
-                ("Zip", result.zip_code, ft.icons.MARKUNREAD_MAILBOX),
-                ("Hostname", result.hostname, ft.icons.DNS),
-                ("ISP", result.isp, ft.icons.BUSINESS),
-                ("DNS", result.dns, ft.icons.ROUTER),
-                ("WebRTC", result.webrtc, ft.icons.WIFI),
-                ("Mobile Connect", result.mobile_connect, ft.icons.SMARTPHONE),
-                ("Proxy Detected", result.proxy_detected, ft.icons.SHIELD),
-                ("Blacklist", result.blacklist, ft.icons.BLOCK),
+                ("IP Address", result.ip_address, ft.Icons.PUBLIC),
+                ("Country", f"{result.country} ({result.country_code})" if result.country_code else result.country, ft.Icons.FLAG),
+                ("City", result.city, ft.Icons.LOCATION_CITY),
+                ("Zip", result.zip_code, ft.Icons.MARKUNREAD_MAILBOX),
+                ("Hostname", result.hostname, ft.Icons.DNS),
+                ("ISP", result.isp, ft.Icons.BUSINESS),
+                ("DNS", result.dns, ft.Icons.ROUTER),
+                ("WebRTC", result.webrtc, ft.Icons.WIFI),
+                ("Mobile Connect", result.mobile_connect, ft.Icons.SMARTPHONE),
+                ("Proxy Detected", result.proxy_detected, ft.Icons.SHIELD),
+                ("Blacklist", result.blacklist, ft.Icons.BLOCK),
             ]
             
             for label, value, icon in fields:
                 if value:
                     # Color code for certain fields
-                    text_color = ft.colors.BLACK
+                    text_color = None  # Use default text color for dark mode
                     if label in ["Proxy Detected", "Blacklist"]:
                         if value.lower() == "no":
-                            text_color = ft.colors.GREEN_700
+                            text_color = ft.Colors.GREEN_400
                         elif value.lower() == "yes":
-                            text_color = ft.colors.RED_700
+                            text_color = ft.Colors.RED_400
                     
                     info_rows.append(
                         ft.Row([
-                            ft.Icon(icon, size=16, color=ft.colors.GREY_700),
-                            ft.Text(f"{label}:", weight=ft.FontWeight.BOLD, size=12),
-                            ft.Text(str(value), size=12, color=text_color, selectable=True),
-                        ], spacing=5)
+                            ft.Icon(icon, size=16, color=ft.Colors.GREY_400),
+                            ft.Text(f"{label}:", weight=ft.FontWeight.BOLD, size=12, no_wrap=False),
+                            ft.Text(str(value), size=12, color=text_color, selectable=True, no_wrap=False),
+                        ], spacing=5, wrap=True)
                     )
         else:
             # Show error
             info_rows.append(
                 ft.Row([
-                    ft.Icon(ft.icons.ERROR_OUTLINE, size=16, color=ft.colors.RED_700),
-                    ft.Text("Error:", weight=ft.FontWeight.BOLD, size=12, color=ft.colors.RED_700),
-                    ft.Text(result.error or "Unknown error", size=12, color=ft.colors.RED_700),
-                ], spacing=5)
+                    ft.Icon(ft.Icons.ERROR_OUTLINE, size=16, color=ft.Colors.RED_400),
+                    ft.Text("Error:", weight=ft.FontWeight.BOLD, size=12, color=ft.Colors.RED_400, no_wrap=False),
+                    ft.Text(result.error or "Unknown error", size=12, color=ft.Colors.RED_400, no_wrap=False),
+                ], spacing=5, wrap=True)
             )
         
         # Create the card

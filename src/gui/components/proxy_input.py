@@ -31,23 +31,23 @@ class ProxyInputComponent:
             min_lines=5,
             max_lines=10,
             hint_text="Enter proxy strings (one per line)\nExample: host:port:username:password",
-            border_color=ft.colors.BLUE_400,
-            focused_border_color=ft.colors.BLUE_700,
+            border_color=ft.Colors.BLUE_400,
+            focused_border_color=ft.Colors.BLUE_700,
             text_size=14,
         )
         
         self.check_button = ft.ElevatedButton(
             "Check Proxies",
-            icon=ft.icons.SEARCH,
+            icon=ft.Icons.SEARCH,
             on_click=self._on_check_clicked,
-            bgcolor=ft.colors.BLUE_700,
-            color=ft.colors.WHITE,
+            bgcolor=ft.Colors.BLUE_700,
+            color=ft.Colors.WHITE,
             height=50,
         )
         
         self.clear_button = ft.OutlinedButton(
             "Clear",
-            icon=ft.icons.CLEAR,
+            icon=ft.Icons.CLEAR,
             on_click=self._on_clear_clicked,
             height=50,
         )
@@ -55,14 +55,14 @@ class ProxyInputComponent:
         self.example_text = ft.Container(
             content=ft.Column([
                 ft.Text("Supported formats:", weight=ft.FontWeight.BOLD, size=12),
-                ft.Text("• host:port:username:password", size=11, color=ft.colors.GREY_700),
-                ft.Text("• host:port", size=11, color=ft.colors.GREY_700),
-                ft.Text("• username:password@host:port", size=11, color=ft.colors.GREY_700),
+                ft.Text("• host:port:username:password", size=11, color=ft.Colors.GREY_400),
+                ft.Text("• host:port", size=11, color=ft.Colors.GREY_400),
+                ft.Text("• username:password@host:port", size=11, color=ft.Colors.GREY_400),
             ]),
             padding=10,
-            border=ft.border.all(1, ft.colors.GREY_400),
+            border=ft.border.all(1, ft.Colors.GREY_700),
             border_radius=5,
-            bgcolor=ft.colors.GREY_100,
+            bgcolor=ft.Colors.GREY_900,
         )
         
         return ft.Container(
@@ -71,9 +71,9 @@ class ProxyInputComponent:
                     "IPFighter Proxy Checker",
                     size=28,
                     weight=ft.FontWeight.BOLD,
-                    color=ft.colors.BLUE_700,
+                    color=ft.Colors.BLUE_700,
                 ),
-                ft.Divider(height=2, color=ft.colors.BLUE_400),
+                ft.Divider(height=2, color=ft.Colors.BLUE_400),
                 ft.Container(height=10),
                 self.proxy_input,
                 ft.Container(height=10),
@@ -112,4 +112,10 @@ class ProxyInputComponent:
     def get_value(self) -> str:
         """Get the current input value"""
         return self.proxy_input.value or ""
+    
+    def clear(self):
+        """Clear the input field"""
+        self.proxy_input.value = ""
+        if self.proxy_input.page:
+            self.proxy_input.update()
 
